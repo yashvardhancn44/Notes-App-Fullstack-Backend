@@ -5,8 +5,18 @@ import { PrismaClient } from "@prisma/client";
 const app = express();
 const prisma = new PrismaClient();
 
+async function dbConnect() {
+  try {
+    await prisma.$connect();
+    console.log("Connected to DB");
+  } catch (error) {
+    console.log("Error connecting:", error);
+  }
+}
+
 app.use(express.json());
 app.use(cors());
+dbConnect();
 
 app.get("/api/notes", async (req, res) => {
   const notes = await prisma.note.findMany();
